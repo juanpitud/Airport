@@ -9,6 +9,9 @@ import core.models.Location;
 import core.models.Plane;
 import core.models.Passenger;
 import com.formdev.flatlaf.FlatDarkLaf;
+import core.controllers.Controllers;
+import core.controllers.utils.Response;
+import core.controllers.utils.Status;
 import java.awt.Color;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,6 +33,7 @@ public class AirportFrame extends javax.swing.JFrame {
     private ArrayList<Plane> planes;
     private ArrayList<Location> locations;
     private ArrayList<Flight> flights;
+    private Controllers mainController;
 
     public AirportFrame() {
         initComponents();
@@ -38,6 +42,8 @@ public class AirportFrame extends javax.swing.JFrame {
         this.planes = new ArrayList<>();
         this.locations = new ArrayList<>();
         this.flights = new ArrayList<>();
+
+        this.mainController = new Controllers();
 
         this.setBackground(new Color(0, 0, 0, 0));
         this.setLocationRelativeTo(null);
@@ -222,7 +228,7 @@ public class AirportFrame extends javax.swing.JFrame {
         jPanel9 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable3 = new javax.swing.JTable();
-        jButton4 = new javax.swing.JButton();
+        refreshAllFlights = new javax.swing.JButton();
         jPanel10 = new javax.swing.JPanel();
         jButton5 = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -262,7 +268,7 @@ public class AirportFrame extends javax.swing.JFrame {
         jButton13.setText("X");
         jButton13.setBorderPainted(false);
         jButton13.setContentAreaFilled(false);
-        jButton13.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton13.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jButton13.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton13ActionPerformed(evt);
@@ -411,7 +417,7 @@ public class AirportFrame extends javax.swing.JFrame {
 
         jTextField8.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         jPanel3.add(jTextField8);
-        jTextField8.setBounds(180, 93, 130, 31);
+        jTextField8.setBounds(180, 93, 130, 33);
 
         jLabel12.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         jLabel12.setText("Brand:");
@@ -420,11 +426,11 @@ public class AirportFrame extends javax.swing.JFrame {
 
         jTextField9.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         jPanel3.add(jTextField9);
-        jTextField9.setBounds(180, 154, 130, 31);
+        jTextField9.setBounds(180, 154, 130, 33);
 
         jTextField10.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         jPanel3.add(jTextField10);
-        jTextField10.setBounds(180, 213, 130, 31);
+        jTextField10.setBounds(180, 213, 130, 33);
 
         jLabel13.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         jLabel13.setText("Model:");
@@ -433,7 +439,7 @@ public class AirportFrame extends javax.swing.JFrame {
 
         jTextField11.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         jPanel3.add(jTextField11);
-        jTextField11.setBounds(180, 273, 130, 31);
+        jTextField11.setBounds(180, 273, 130, 33);
 
         jLabel14.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         jLabel14.setText("Max Capacity:");
@@ -442,7 +448,7 @@ public class AirportFrame extends javax.swing.JFrame {
 
         jTextField12.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         jPanel3.add(jTextField12);
-        jTextField12.setBounds(180, 333, 130, 31);
+        jTextField12.setBounds(180, 333, 130, 33);
 
         jLabel15.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         jLabel15.setText("Airline:");
@@ -927,7 +933,7 @@ public class AirportFrame extends javax.swing.JFrame {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel43)
                     .addComponent(jTextField27, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addGap(113, 113, 113))
         );
@@ -1141,11 +1147,11 @@ public class AirportFrame extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(jTable3);
 
-        jButton4.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
-        jButton4.setText("Refresh");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        refreshAllFlights.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
+        refreshAllFlights.setText("Refresh");
+        refreshAllFlights.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                refreshAllFlightsActionPerformed(evt);
             }
         });
 
@@ -1160,7 +1166,7 @@ public class AirportFrame extends javax.swing.JFrame {
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 1100, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel9Layout.createSequentialGroup()
                         .addGap(521, 521, 521)
-                        .addComponent(jButton4)))
+                        .addComponent(refreshAllFlights)))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
         jPanel9Layout.setVerticalGroup(
@@ -1169,8 +1175,8 @@ public class AirportFrame extends javax.swing.JFrame {
                 .addGap(60, 60, 60)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton4)
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addComponent(refreshAllFlights)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Show all flights", jPanel9);
@@ -1409,24 +1415,25 @@ public class AirportFrame extends javax.swing.JFrame {
         if (user.isSelected()) {
             user.setSelected(false);
             userSelect.setSelectedIndex(0);
-
         }
+
         for (int i = 1; i < jTabbedPane1.getTabCount(); i++) {
-                jTabbedPane1.setEnabledAt(i, true);
+            jTabbedPane1.setEnabledAt(i, true);
         }
         jTabbedPane1.setEnabledAt(5, false);
         jTabbedPane1.setEnabledAt(6, false);
+        jTabbedPane1.setEnabledAt(7, false);
     }//GEN-LAST:event_administratorActionPerformed
 
     private void userActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userActionPerformed
         if (administrator.isSelected()) {
             administrator.setSelected(false);
         }
+
         for (int i = 1; i < jTabbedPane1.getTabCount(); i++) {
-
             jTabbedPane1.setEnabledAt(i, false);
-
         }
+
         jTabbedPane1.setEnabledAt(9, true);
         jTabbedPane1.setEnabledAt(5, true);
         jTabbedPane1.setEnabledAt(6, true);
@@ -1628,14 +1635,19 @@ public class AirportFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+    private void refreshAllFlightsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshAllFlightsActionPerformed
         DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
         model.setRowCount(0);
-        for (Flight flight : this.flights) {
-            model.addRow(new Object[]{flight.getId(), flight.getDepartureLocation().getAirportId(), flight.getArrivalLocation().getAirportId(), (flight.getScaleLocation() == null ? "-" : flight.getScaleLocation().getAirportId()), flight.getDepartureDate(), flight.calculateArrivalDate(), flight.getPlane().getId(), flight.getNumPassengers()});
+
+        Response response = mainController.getFlightController().getAllFlights();
+        if (response.getStatus() == Status.OK) {
+            ArrayList<Flight> flights = (ArrayList<Flight>) response.getObject();
+
+            for (Flight flight : flights) {
+                model.addRow(new Object[]{flight.getId(), flight.getDepartureLocation().getAirportId(), flight.getArrivalLocation().getAirportId(), (flight.getScaleLocation() == null ? "-" : flight.getScaleLocation().getAirportId()), flight.getDepartureDate(), flight.calculateArrivalDate(), flight.getPlane().getId(), flight.getNumPassengers()});
+            }
         }
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_refreshAllFlightsActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
@@ -1662,11 +1674,10 @@ public class AirportFrame extends javax.swing.JFrame {
     private void userSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userSelectActionPerformed
         try {
             String id = userSelect.getSelectedItem().toString();
-            if (! id.equals(userSelect.getItemAt(0))) {
+            if (!id.equals(userSelect.getItemAt(0))) {
                 jTextField20.setText(id);
                 jTextField28.setText(id);
-            }
-            else{
+            } else {
                 jTextField20.setText("");
                 jTextField28.setText("");
             }
@@ -1696,7 +1707,6 @@ public class AirportFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton13;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
@@ -1813,6 +1823,7 @@ public class AirportFrame extends javax.swing.JFrame {
     private core.views.PanelRound panelRound1;
     private core.views.PanelRound panelRound2;
     private core.views.PanelRound panelRound3;
+    private javax.swing.JButton refreshAllFlights;
     private javax.swing.JRadioButton user;
     private javax.swing.JComboBox<String> userSelect;
     // End of variables declaration//GEN-END:variables
