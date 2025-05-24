@@ -58,6 +58,11 @@ public class AirportFrame extends javax.swing.JFrame {
         this.generateLocations();
         this.generatePassengers();
 
+        refreshAllFlights.doClick();
+        refreshAllLocations.doClick();
+        refreshAllPassengers.doClick();
+        refreshAllPlanes.doClick();
+
         this.blockPanels();
     }
 
@@ -1781,8 +1786,17 @@ public class AirportFrame extends javax.swing.JFrame {
 
     private void userSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userSelectActionPerformed
         try {
-            String id = userSelect.getSelectedItem().toString();
-            if (!id.equals(userSelect.getItemAt(0))) {
+            String name = userSelect.getSelectedItem().toString();
+            if (!name.equals(userSelect.getItemAt(0))) {
+                ArrayList<Passenger> passengers = (ArrayList<Passenger>) mainController.getPassengerController().getAllPassengers().getObject();
+                String id = "";
+
+                for (Passenger passenger : passengers) {
+                    if ((passenger.getFirstname() + " " + passenger.getLastname()).equals(name)) {
+                        id = "" + passenger.getId();
+                    }
+                }
+
                 jTextField20.setText(id);
                 jTextField28.setText(id);
             } else {
