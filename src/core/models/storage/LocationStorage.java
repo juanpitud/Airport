@@ -50,6 +50,10 @@ public class LocationStorage {
     }
 
     public ArrayList<Location> getAll() {
-        return locations;
+        return new ArrayList<>(locations);
+    }
+
+    public boolean delete(String id) {
+        return locations.removeIf(location -> location.getAirportId().equals(id));
     }
 }

@@ -50,6 +50,10 @@ public class PassengerStorage {
     }
 
     public ArrayList<Passenger> getAll() {
-        return passengers;
+        return new ArrayList<>(passengers);
+    }
+
+    public boolean delete(long id) {
+        return passengers.removeIf(passenger -> passenger.getId() == id);
     }
 }

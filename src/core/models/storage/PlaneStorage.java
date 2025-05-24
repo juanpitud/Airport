@@ -50,6 +50,10 @@ public class PlaneStorage {
     }
 
     public ArrayList<Plane> getAll() {
-        return planes;
+        return new ArrayList<>(planes);
+    }
+
+    public boolean delete(String id) {
+        return planes.removeIf(plane -> plane.getId().equals(id));
     }
 }
