@@ -9,7 +9,7 @@ package core.models;
  * @author edangulo
  */
 public class Location {
-    
+
     private final String airportId;
     private String airportName;
     private String airportCity;
@@ -49,5 +49,25 @@ public class Location {
     public double getAirportLongitude() {
         return airportLongitude;
     }
-    
+
+    public void setAirportName(String airportName) {
+        this.airportName = airportName;
+    }
+
+    public void setAirportCity(String airportCity) {
+        this.airportCity = airportCity;
+    }
+
+    public void setAirportCountry(String airportCountry) {
+        this.airportCountry = airportCountry;
+    }
+
+    public void setAirportLatitude(double airportLatitude) {
+        this.airportLatitude = airportLatitude;
+    }
+
+    public void setAirportLongitude(double airportLongitude) {
+        this.airportLongitude = airportLongitude;
+    }
+
 }

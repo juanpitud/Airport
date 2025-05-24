@@ -11,8 +11,8 @@ import core.models.storage.FlightStorage;
 import core.models.Location;
 import core.models.Plane;
 import core.models.storage.LocationStorage;
+import core.models.storage.PlaneStorage;
 import java.time.LocalDateTime;
-import java.util.regex.Pattern;
 
 /**
  *
@@ -25,14 +25,14 @@ public class FlightController {
             return new Response("Id must be not empty.", Status.BAD_REQUEST);
         }
 
-        Pattern pattern = Pattern.compile("[A-Z]{3}\\d{3}");
-        if (pattern.matcher(id).find()) {
+        if (!id.matches("^[A-Z]{3}\\d{3}$")) {
             return new Response("Id must follow ABZ019 format.", Status.BAD_REQUEST);
         }
 
-        Flight existentFlight = FlightStorage.getInstance().get(id);
-        if (existentFlight != null) {
-            return new Response("Id must be unique.", Status.BAD_REQUEST);
+        PlaneStorage planeStorage = PlaneStorage.getInstance();
+        Plane existingPlane = planeStorage.get(plane.getId());
+        if (existingPlane == null) {
+            return new Response("Plane must be valid.", Status.BAD_REQUEST);
         }
 
         LocationStorage locationStorage = LocationStorage.getInstance();
@@ -46,15 +46,16 @@ public class FlightController {
             return new Response("Arrival location must be valid.", Status.BAD_REQUEST);
         }
 
-        // localizaciones   
-        //        if (departureDate.)
-        // comprobar si la fecha es valida
         if (hoursDurationArrival + minutesDurationArrival <= 0) {
             return new Response("Time of flight must be valid.", Status.BAD_REQUEST);
         }
 
         Flight flight = new Flight(id, plane, departureLocation, arrivalLocation, departureDate, hoursDurationArrival, minutesDurationArrival);
-        FlightStorage.getInstance().add(flight);
+
+        boolean ok = FlightStorage.getInstance().add(flight);
+        if (!ok) {
+            return new Response("Flight with this ID already exists.", Status.BAD_REQUEST);
+        }
 
         return new Response("Flight created successfully.", Status.CREATED);
     }
@@ -69,7 +70,9 @@ public class FlightController {
     }
 
     public static Response updateFlight(String id, Plane plane, Location departureLocation, Location arrivalLocation, LocalDateTime departureDate, int hoursDurationArrival, int minutesDurationArrival) {
-        Flight flight = FlightStorage.getInstance().get(id);
+        FlightStorage storage = FlightStorage.getInstance();
+        Flight flight = storage.get(id);
+
         if (flight == null) {
             return new Response("Flight not found.", Status.NOT_FOUND);
         }
@@ -85,12 +88,11 @@ public class FlightController {
             return new Response("Arrival location must be valid.", Status.BAD_REQUEST);
         }
 
-///
         if (hoursDurationArrival + minutesDurationArrival <= 0) {
             return new Response("Time of flight must be valid.", Status.BAD_REQUEST);
         }
 
-        return new Response("Flight edited successfully.", Status.NO_CONTENT);
+        return new Response("Flight edited successfully.", Status.OK);
 
     }
 
@@ -100,10 +102,11 @@ public class FlightController {
             return new Response("Flight not found.", Status.NOT_FOUND);
         }
 
-        return new Response("Flight deleted successfully.", Status.NO_CONTENT);
+        return new Response("Flight deleted successfully.", Status.OK);
     }
 
     public static Response getAllFlights() {
         return new Response("Flight retrieved successfully.", Status.OK, FlightStorage.getInstance().getAll());
     }
+
 }

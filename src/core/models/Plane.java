@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * @author edangulo
  */
 public class Plane {
-    
+
     private final String id;
     private String brand;
     private String model;
@@ -31,7 +31,7 @@ public class Plane {
     public void addFlight(Flight flight) {
         this.flights.add(flight);
     }
-    
+
     public String getId() {
         return id;
     }
@@ -55,9 +55,25 @@ public class Plane {
     public ArrayList<Flight> getFlights() {
         return flights;
     }
-    
+
     public int getNumFlights() {
         return flights.size();
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public void setAirline(String airline) {
+        this.airline = airline;
+    }
+
+    public void setFlights(ArrayList<Flight> flights) {
+        this.flights = flights;
     }
     
 }
