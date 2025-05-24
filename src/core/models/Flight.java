@@ -55,6 +55,12 @@ public class Flight {
     }
 
     public void addPassenger(Passenger passenger) {
+        for (Passenger p : this.passengers) {
+            if (p.getId() == passenger.getId()) {
+                return;
+            }
+        }
+
         this.passengers.add(passenger);
     }
 

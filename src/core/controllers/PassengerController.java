@@ -6,7 +6,9 @@ package core.controllers;
 
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
+import core.models.Flight;
 import core.models.Passenger;
+import core.models.storage.FlightStorage;
 import core.models.storage.PassengerStorage;
 import java.time.LocalDate;
 
@@ -118,5 +120,22 @@ public class PassengerController {
 
     public static Response getAllPassengers() {
         return new Response("Locations retrieved successfully.", Status.OK, PassengerStorage.getInstance().getAll());
+    }
+
+    public static Response addPassengerToFlight(String flightId, long passengerId) {
+        Flight flight = FlightStorage.getInstance().get(flightId);
+        if (flight == null) {
+            return new Response("Flight not found.", Status.NOT_FOUND);
+        }
+
+        Passenger passenger = PassengerStorage.getInstance().get(passengerId);
+        if (passenger == null) {
+            return new Response("Passenger not found.", Status.NOT_FOUND);
+        }
+
+        flight.addPassenger(passenger);
+        passenger.addFlight(flight);
+
+        return new Response("Passenger added to flight successfully.", Status.OK);
     }
 }

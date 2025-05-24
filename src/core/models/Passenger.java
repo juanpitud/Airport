@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * @author edangulo
  */
 public class Passenger {
-    
+
     private final long id;
     private String firstname;
     private String lastname;
@@ -35,9 +35,15 @@ public class Passenger {
     }
 
     public void addFlight(Flight flight) {
+        for (Flight f : this.flights) {
+            if (f.getId().equals(flight.getId())) {
+                return;
+            }
+        }
+
         this.flights.add(flight);
     }
-    
+
     public long getId() {
         return id;
     }
@@ -93,21 +99,21 @@ public class Passenger {
     public void setCountry(String country) {
         this.country = country;
     }
-    
+
     public String getFullname() {
         return firstname + " " + lastname;
     }
-    
+
     public String generateFullPhone() {
         return "+" + countryPhoneCode + " " + phone;
     }
-    
+
     public int calculateAge() {
         return Period.between(birthDate, LocalDate.now()).getYears();
     }
-    
+
     public int getNumFlights() {
         return flights.size();
     }
-    
+
 }

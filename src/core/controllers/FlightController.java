@@ -10,9 +10,12 @@ import core.models.Flight;
 import core.models.storage.FlightStorage;
 import core.models.Location;
 import core.models.Plane;
+import core.models.Passenger;
 import core.models.storage.LocationStorage;
+import core.models.storage.PassengerStorage;
 import core.models.storage.PlaneStorage;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 /**
  *
@@ -107,5 +110,34 @@ public class FlightController {
 
     public static Response getAllFlights() {
         return new Response("Flights retrieved successfully.", Status.OK, FlightStorage.getInstance().getAll());
+    }
+
+    public static Response addPassengerToFlight(String flightId, long passengerId) {
+        Flight flight = FlightStorage.getInstance().get(flightId);
+        if (flight == null) {
+            return new Response("Flight not found.", Status.NOT_FOUND);
+        }
+
+        Passenger passenger = PassengerStorage.getInstance().get(passengerId);
+        if (passenger == null) {
+            return new Response("Passenger not found.", Status.NOT_FOUND);
+        }
+
+        flight.addPassenger(passenger);
+        passenger.addFlight(flight);
+
+        return new Response("Passenger added to flight successfully.", Status.OK);
+    }
+
+    public static Response getByPassenger(long passengerId) {
+        Passenger passenger = PassengerStorage.getInstance().get(passengerId);
+        if (passenger == null) {
+            return new Response("Passenger not found.", Status.NOT_FOUND);
+        }
+
+        // copia segura
+        ArrayList<Flight> flights = new ArrayList<>(passenger.getFlights());
+
+        return new Response("Flights found.", Status.OK, flights);
     }
 }
