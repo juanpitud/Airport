@@ -115,4 +115,8 @@ public class PassengerController {
 
         return new Response("Passenger deleted successfully.", Status.OK);
     }
+
+    public static Response getAllPassengers() {
+        return new Response("Locations retrieved successfully.", Status.OK, PassengerStorage.getInstance().getAll());
+    }
 }

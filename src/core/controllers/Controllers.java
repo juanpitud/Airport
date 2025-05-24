@@ -10,10 +10,10 @@ package core.controllers;
  */
 public class Controllers {
 
-    private FlightController flightController;
-    private LocationController locationController;
-    private PassengerController passengerController;
-    private PlaneController planeController;
+    private final FlightController flightController;
+    private final LocationController locationController;
+    private final PassengerController passengerController;
+    private final PlaneController planeController;
 
     public Controllers() {
         this.flightController = new FlightController();

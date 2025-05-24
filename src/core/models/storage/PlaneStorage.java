@@ -5,6 +5,7 @@
 package core.models.storage;
 
 import core.models.Plane;
+import core.models.storage.json.PlaneReader;
 import java.util.ArrayList;
 
 /**
@@ -21,6 +22,14 @@ public class PlaneStorage {
 
     private PlaneStorage() {
         this.planes = new ArrayList<>();
+        this.loadFromJSON();
+    }
+
+    public void loadFromJSON() {
+        ArrayList<Plane> planes = PlaneReader.read("C:\\Users\\david\\Desktop\\Airport\\json\\planes.json");
+        for (Plane plane : planes) {
+            this.add(plane);
+        }
     }
 
     public static PlaneStorage getInstance() {

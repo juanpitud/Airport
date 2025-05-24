@@ -7,6 +7,13 @@ package core.models.storage.json;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.json.JSONArray;
+import core.models.Flight;
+import core.models.Location;
+import core.models.Plane;
+import core.models.storage.LocationStorage;
+import core.models.storage.PlaneStorage;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import org.json.JSONObject;
 
 /**
@@ -15,14 +22,35 @@ import org.json.JSONObject;
  */
 public class FlightReader {
 
-    public void read(String path) {
+    public static ArrayList<Flight> read(String path) {
+        ArrayList<Flight> flights = new ArrayList<>();
+
         try {
-            String content = Files.readAllBytes(Paths.get(path)).toString();
+            String content = new String(Files.readAllBytes(Paths.get(path)));
             JSONArray flightsData = new JSONArray(content);
             for (int i = 0; i < flightsData.length(); i++) {
-                
+                JSONObject obj = flightsData.getJSONObject(i);
+
+                Plane plane = PlaneStorage.getInstance().get(obj.getString("plane"));
+                Location departure = LocationStorage.getInstance().get(obj.getString("departureLocation"));
+                Location arrival = LocationStorage.getInstance().get(obj.getString("arrivalLocation"));
+
+                Flight flight = new Flight(
+                        obj.getString("id"),
+                        plane,
+                        departure,
+                        arrival,
+                        LocalDateTime.parse(obj.getString("departureDate")),
+                        obj.getInt("hoursDurationArrival"),
+                        obj.getInt("minutesDurationArrival")
+                );
+
+                flights.add(flight);
             }
         } catch (Exception e) {
+            System.out.println(e);
         }
+
+        return flights;
     }
 }

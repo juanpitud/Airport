@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
  */
 public class FlightController {
 
-    public static Response createFlight(String id, Plane plane, Location departureLocation, Location arrivalLocation, LocalDateTime departureDate, int hoursDurationArrival, int minutesDurationArrival) {
+    public static Response createFlight(String id, String planeId, String departureId, String arrivalId, LocalDateTime departureDate, int hoursDurationArrival, int minutesDurationArrival) {
         if (id.isEmpty()) {
             return new Response("Id must be not empty.", Status.BAD_REQUEST);
         }
@@ -30,14 +30,14 @@ public class FlightController {
         }
 
         PlaneStorage planeStorage = PlaneStorage.getInstance();
-        Plane existingPlane = planeStorage.get(plane.getId());
-        if (existingPlane == null) {
+        Plane plane = planeStorage.get(planeId);
+        if (plane == null) {
             return new Response("Plane must be valid.", Status.BAD_REQUEST);
         }
 
         LocationStorage locationStorage = LocationStorage.getInstance();
-        Location departure = locationStorage.get(departureLocation.getAirportId());
-        Location arrival = locationStorage.get(arrivalLocation.getAirportId());
+        Location departure = locationStorage.get(departureId);
+        Location arrival = locationStorage.get(arrivalId);
         if (departure == null) {
             return new Response("Departure location must be valid.", Status.BAD_REQUEST);
         }
@@ -50,7 +50,7 @@ public class FlightController {
             return new Response("Time of flight must be valid.", Status.BAD_REQUEST);
         }
 
-        Flight flight = new Flight(id, plane, departureLocation, arrivalLocation, departureDate, hoursDurationArrival, minutesDurationArrival);
+        Flight flight = new Flight(id, plane, departure, arrival, departureDate, hoursDurationArrival, minutesDurationArrival);
 
         boolean ok = FlightStorage.getInstance().add(flight);
         if (!ok) {
@@ -106,7 +106,6 @@ public class FlightController {
     }
 
     public static Response getAllFlights() {
-        return new Response("Flight retrieved successfully.", Status.OK, FlightStorage.getInstance().getAll());
+        return new Response("Flights retrieved successfully.", Status.OK, FlightStorage.getInstance().getAll());
     }
-
 }

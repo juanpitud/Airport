@@ -5,6 +5,7 @@
 package core.models.storage;
 
 import core.models.Location;
+import core.models.storage.json.LocationReader;
 import java.util.ArrayList;
 
 /**
@@ -21,6 +22,14 @@ public class LocationStorage {
 
     private LocationStorage() {
         this.locations = new ArrayList<>();
+        this.loadFromJSON();
+    }
+
+    public void loadFromJSON() {
+        ArrayList<Location> locations = LocationReader.read("C:\\Users\\david\\Desktop\\Airport\\json\\locations.json");
+        for (Location location : locations) {
+            this.add(location);
+        }
     }
 
     public static LocationStorage getInstance() {

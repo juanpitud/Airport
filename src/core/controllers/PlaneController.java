@@ -93,4 +93,8 @@ public class PlaneController {
         }
         return new Response("Plane deleted successfully.", Status.CREATED);
     }
+
+    public static Response getAllPlanes() {
+        return new Response("Locations retrieved successfully.", Status.OK, PlaneStorage.getInstance().getAll());
+    }
 }

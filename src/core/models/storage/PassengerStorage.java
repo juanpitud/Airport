@@ -5,6 +5,7 @@
 package core.models.storage;
 
 import core.models.Passenger;
+import core.models.storage.json.PassengerReader;
 import java.util.ArrayList;
 
 /**
@@ -21,6 +22,14 @@ public class PassengerStorage {
 
     private PassengerStorage() {
         this.passengers = new ArrayList<>();
+        this.loadFromJSON();
+    }
+
+    public void loadFromJSON() {
+        ArrayList<Passenger> passengers = PassengerReader.read("C:\\Users\\david\\Desktop\\Airport\\json\\passengers.json");
+        for (Passenger passenger : passengers) {
+            this.add(passenger);
+        }
     }
 
     public static PassengerStorage getInstance() {

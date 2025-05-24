@@ -129,4 +129,8 @@ public class LocationController {
         return new Response("Location deleted successfully.", Status.OK);
     }
 
+    public static Response getAllLocations() {
+        return new Response("Locations retrieved successfully.", Status.OK, LocationStorage.getInstance().getAll());
+    }
+
 }
