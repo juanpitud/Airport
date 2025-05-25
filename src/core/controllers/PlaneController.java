@@ -17,7 +17,7 @@ public class PlaneController {
 
     public static Response createPlane(String id, String brand, String model, int maxCapacity, String airline) {
         if (id.isEmpty()) {
-            return new Response("Plane Id must be not empty.", Status.BAD_REQUEST);
+            return new Response("Plane Id must not be empty.", Status.BAD_REQUEST);
         }
 
         if (!id.matches("^[A-Z]{2}\\d{5}$")) {

@@ -35,14 +35,22 @@ public class FlightReader {
                 Location departure = LocationStorage.getInstance().get(obj.getString("departureLocation"));
                 Location arrival = LocationStorage.getInstance().get(obj.getString("arrivalLocation"));
 
+                Location scale = null;
+                if (!obj.isNull("scaleLocation")) {
+                    scale = LocationStorage.getInstance().get(obj.getString("scaleLocation"));
+                }
+
                 Flight flight = new Flight(
                         obj.getString("id"),
                         plane,
                         departure,
+                        scale,
                         arrival,
                         LocalDateTime.parse(obj.getString("departureDate")),
                         obj.getInt("hoursDurationArrival"),
-                        obj.getInt("minutesDurationArrival")
+                        obj.getInt("minutesDurationArrival"),
+                        obj.getInt("hoursDurationScale"),
+                        obj.getInt("minutesDurationScale")
                 );
 
                 flights.add(flight);

@@ -30,13 +30,10 @@ public class AirportFrame extends javax.swing.JFrame {
      * Creates new form AirportFrame
      */
     private int x, y;
-    private ArrayList<Flight> flights;
     private Controllers mainController;
 
     public AirportFrame() {
         initComponents();
-
-        this.flights = new ArrayList<>();
 
         this.mainController = new Controllers();
 
@@ -97,6 +94,7 @@ public class AirportFrame extends javax.swing.JFrame {
         ArrayList<Flight> flights = (ArrayList<Flight>) mainController.getFlightController().getAllFlights().getObject();
         for (Flight flight : flights) {
             flightAddPassenger.addItem(flight.getId());
+            idDelay.addItem(flight.getId());
         }
     }
 
@@ -121,7 +119,7 @@ public class AirportFrame extends javax.swing.JFrame {
             MONTH2.addItem("" + i);
             MONTH3.addItem("" + i);
             MONTH4.addItem("" + i);
-            jComboBox6.addItem("" + i);
+            hourDelay.addItem("" + i);
         }
     }
 
@@ -130,7 +128,7 @@ public class AirportFrame extends javax.swing.JFrame {
             MINUTE2.addItem("" + i);
             DAY3.addItem("" + i);
             DAY4.addItem("" + i);
-            jComboBox8.addItem("" + i);
+            minuteDelay.addItem("" + i);
         }
     }
 
@@ -274,13 +272,13 @@ public class AirportFrame extends javax.swing.JFrame {
         allLocations = new javax.swing.JTable();
         refreshAllLocations = new javax.swing.JButton();
         jPanel12 = new javax.swing.JPanel();
-        jComboBox6 = new javax.swing.JComboBox<>();
+        hourDelay = new javax.swing.JComboBox<>();
         jLabel46 = new javax.swing.JLabel();
         jLabel47 = new javax.swing.JLabel();
-        jComboBox7 = new javax.swing.JComboBox<>();
+        idDelay = new javax.swing.JComboBox<>();
         jLabel48 = new javax.swing.JLabel();
-        jComboBox8 = new javax.swing.JComboBox<>();
-        jButton7 = new javax.swing.JButton();
+        minuteDelay = new javax.swing.JComboBox<>();
+        delayFlight = new javax.swing.JButton();
         panelRound3 = new core.views.PanelRound();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -1335,8 +1333,8 @@ public class AirportFrame extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Show all locations", jPanel11);
 
-        jComboBox6.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
-        jComboBox6.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hour" }));
+        hourDelay.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
+        hourDelay.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hour" }));
 
         jLabel46.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         jLabel46.setText("Hours:");
@@ -1344,20 +1342,20 @@ public class AirportFrame extends javax.swing.JFrame {
         jLabel47.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         jLabel47.setText("ID:");
 
-        jComboBox7.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
-        jComboBox7.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ID" }));
+        idDelay.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
+        idDelay.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ID" }));
 
         jLabel48.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         jLabel48.setText("Minutes:");
 
-        jComboBox8.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
-        jComboBox8.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Minute" }));
+        minuteDelay.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
+        minuteDelay.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Minute" }));
 
-        jButton7.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
-        jButton7.setText("Delay");
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
+        delayFlight.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
+        delayFlight.setText("Delay");
+        delayFlight.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+                delayFlightActionPerformed(evt);
             }
         });
 
@@ -1371,19 +1369,19 @@ public class AirportFrame extends javax.swing.JFrame {
                     .addGroup(jPanel12Layout.createSequentialGroup()
                         .addComponent(jLabel48)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jComboBox8, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(minuteDelay, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel12Layout.createSequentialGroup()
                         .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel47)
                             .addComponent(jLabel46))
                         .addGap(79, 79, 79)
                         .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBox6, 0, 105, Short.MAX_VALUE)
-                            .addComponent(jComboBox7, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(hourDelay, 0, 105, Short.MAX_VALUE)
+                            .addComponent(idDelay, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(820, 820, 820))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton7)
+                .addComponent(delayFlight)
                 .addGap(531, 531, 531))
         );
         jPanel12Layout.setVerticalGroup(
@@ -1392,17 +1390,17 @@ public class AirportFrame extends javax.swing.JFrame {
                 .addGap(26, 26, 26)
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel47)
-                    .addComponent(jComboBox7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(idDelay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(32, 32, 32)
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel46)
-                    .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(hourDelay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(32, 32, 32)
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel48)
-                    .addComponent(jComboBox8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(minuteDelay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 307, Short.MAX_VALUE)
-                .addComponent(jButton7)
+                .addComponent(delayFlight)
                 .addGap(33, 33, 33))
         );
 
@@ -1572,7 +1570,7 @@ public class AirportFrame extends javax.swing.JFrame {
 
         LocalDateTime departureDate = LocalDateTime.of(year, month, day, hour, minutes);
 
-        Response response = mainController.getFlightController().createFlight(id, planeId, departureLocationId, arrivalLocationId, departureDate, hoursDurationsArrival, minutesDurationsArrival);
+        Response response = mainController.getFlightController().createFlight(id, planeId, departureLocationId, scaleLocationId, arrivalLocationId, departureDate, hoursDurationsArrival, minutesDurationsArrival, hoursDurationsScale, minutesDurationsScale);
         JOptionPane.showMessageDialog(this, response.getMessage(), "Información", response.getStatus() == Status.CREATED ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE);
 
         if (response.getStatus() == Status.CREATED) {
@@ -1593,6 +1591,7 @@ public class AirportFrame extends javax.swing.JFrame {
         }
 
         this.flightAddPassenger.addItem(id);
+        this.idDelay.addItem(id);
     }//GEN-LAST:event_createFlightActionPerformed
 
     private void updateUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateUserActionPerformed
@@ -1635,21 +1634,20 @@ public class AirportFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_addPassengerToFlightActionPerformed
 
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        // TODO add your handling code here:
-        String flightId = jComboBox7.getItemAt(jComboBox7.getSelectedIndex());
-        int hours = Integer.parseInt(jComboBox6.getItemAt(jComboBox6.getSelectedIndex()));
-        int minutes = Integer.parseInt(jComboBox8.getItemAt(jComboBox8.getSelectedIndex()));
+    private void delayFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delayFlightActionPerformed
+        String flightId = idDelay.getItemAt(idDelay.getSelectedIndex());
+        int hours = Integer.parseInt(hourDelay.getItemAt(hourDelay.getSelectedIndex()));
+        int minutes = Integer.parseInt(minuteDelay.getItemAt(minuteDelay.getSelectedIndex()));
 
-        Flight flight = null;
-        for (Flight f : this.flights) {
-            if (flightId.equals(f.getId())) {
-                flight = f;
-            }
+        Response response = mainController.getFlightController().delayFlight(flightId, hours, minutes);
+        JOptionPane.showMessageDialog(this, response.getMessage(), "Información", response.getStatus() == Status.OK ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE);
+
+        if (response.getStatus() == Status.OK) {
+            idDelay.setSelectedIndex(0);
+            hourDelay.setSelectedIndex(0);
+            minuteDelay.setSelectedIndex(0);
         }
-
-        flight.delay(hours, minutes);
-    }//GEN-LAST:event_jButton7ActionPerformed
+    }//GEN-LAST:event_delayFlightActionPerformed
 
     private void refreshMyFlightsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshMyFlightsActionPerformed
         long passengerId = Long.parseLong(userSelect.getItemAt(userSelect.getSelectedIndex()));
@@ -1663,7 +1661,7 @@ public class AirportFrame extends javax.swing.JFrame {
             flights.sort((a, b) -> a.getDepartureDate().compareTo(b.getDepartureDate()));
 
             for (Flight flight : flights) {
-                model.addRow(new Object[]{flight.getId(), flight.getDepartureLocation().getAirportId(), flight.getArrivalLocation().getAirportId(), (flight.getScaleLocation() == null ? "-" : flight.getScaleLocation().getAirportId()), flight.getDepartureDate(), flight.calculateArrivalDate(), flight.getPlane().getId(), flight.getNumPassengers()});
+                model.addRow(new Object[]{flight.getId(), flight.getDepartureLocation().getAirportId(), flight.getArrivalLocation().getAirportId(), (flight.getScaleLocation() == null ? "-" : flight.getScaleLocation().getAirportId()), flight.getDepartureDate().toString().replace('T', ' '), flight.calculateArrivalDate().toString().replace('T', ' '), flight.getPlane().getId(), flight.getNumPassengers()});
             }
         } else {
             JOptionPane.showMessageDialog(this, response.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -1795,21 +1793,20 @@ public class AirportFrame extends javax.swing.JFrame {
     private javax.swing.JButton createLocation;
     private javax.swing.JButton createPassenger;
     private javax.swing.JButton createPlane;
+    private javax.swing.JButton delayFlight;
     private javax.swing.JComboBox<String> departureFlight;
     private javax.swing.JTextField firstNamePassenger;
     private javax.swing.JTextField firstNameUpdate;
     private javax.swing.JComboBox<String> flightAddPassenger;
+    private javax.swing.JComboBox<String> hourDelay;
     private javax.swing.JTextField idAddPassenger;
+    private javax.swing.JComboBox<String> idDelay;
     private javax.swing.JTextField idFlight;
     private javax.swing.JTextField idLocation;
     private javax.swing.JTextField idPassenger;
     private javax.swing.JTextField idPlane;
     private javax.swing.JTextField idUserUpdate;
     private javax.swing.JButton jButton13;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JComboBox<String> jComboBox6;
-    private javax.swing.JComboBox<String> jComboBox7;
-    private javax.swing.JComboBox<String> jComboBox8;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1882,6 +1879,7 @@ public class AirportFrame extends javax.swing.JFrame {
     private javax.swing.JTextField lastNameUpdate;
     private javax.swing.JTextField latitudeLocation;
     private javax.swing.JTextField longitudeLocation;
+    private javax.swing.JComboBox<String> minuteDelay;
     private javax.swing.JTextField modelPlane;
     private javax.swing.JTextField nameLocation;
     private core.views.PanelRound panelRound1;

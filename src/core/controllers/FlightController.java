@@ -23,9 +23,9 @@ import java.util.ArrayList;
  */
 public class FlightController {
 
-    public static Response createFlight(String id, String planeId, String departureId, String arrivalId, LocalDateTime departureDate, int hoursDurationArrival, int minutesDurationArrival) {
+    public static Response createFlight(String id, String planeId, String departureId, String scaleId, String arrivalId, LocalDateTime departureDate, int hoursDurationArrival, int minutesDurationArrival, int hoursDurationScale, int minutesDurationScale) {
         if (id.isEmpty()) {
-            return new Response("Id must be not empty.", Status.BAD_REQUEST);
+            return new Response("Id must not be empty.", Status.BAD_REQUEST);
         }
 
         if (!id.matches("^[A-Z]{3}\\d{3}$")) {
@@ -53,7 +53,16 @@ public class FlightController {
             return new Response("Time of flight must be valid.", Status.BAD_REQUEST);
         }
 
-        Flight flight = new Flight(id, plane, departure, arrival, departureDate, hoursDurationArrival, minutesDurationArrival);
+        Location scale = locationStorage.get(scaleId);
+        if (scale != null && hoursDurationScale + minutesDurationScale <= 0) {
+            return new Response("Time of scale must be valid.", Status.BAD_REQUEST);
+        }
+
+        if (scale == null && hoursDurationScale + minutesDurationScale > 0) {
+            return new Response("Time of scale must be zero if there is no scale.", Status.BAD_REQUEST);
+        }
+
+        Flight flight = new Flight(id, plane, departure, scale, arrival, departureDate, hoursDurationArrival, minutesDurationArrival, hoursDurationScale, minutesDurationScale);
 
         boolean ok = FlightStorage.getInstance().add(flight);
         if (!ok) {
@@ -139,5 +148,20 @@ public class FlightController {
         ArrayList<Flight> flights = new ArrayList<>(passenger.getFlights());
 
         return new Response("Flights found.", Status.OK, flights);
+    }
+
+    public static Response delayFlight(String id, int hours, int minutes) {
+        Flight flight = FlightStorage.getInstance().get(id);
+        if (flight == null) {
+            return new Response("Flight not found.", Status.NOT_FOUND);
+        }
+
+        if (hours + minutes <= 0) {
+            return new Response("Time must be valid.", Status.BAD_REQUEST);
+        }
+
+        flight.delay(hours, minutes);
+
+        return new Response("Flights delayed.", Status.OK);
     }
 }

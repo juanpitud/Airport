@@ -17,7 +17,7 @@ public class LocationController {
 
     public static Response createLocation(String airportId, String name, String city, String country, double latitude, double longitude) {
         if (airportId.isEmpty()) {
-            return new Response("Airport Id must be not empty.", Status.BAD_REQUEST);
+            return new Response("Airport Id must not be empty.", Status.BAD_REQUEST);
         }
 
         if (!airportId.matches("^[A-Z]{3}$")) {
