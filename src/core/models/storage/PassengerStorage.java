@@ -26,7 +26,7 @@ public class PassengerStorage {
     }
 
     public void loadFromJSON() {
-        ArrayList<Passenger> passengers = PassengerReader.read("C:\\Users\\david\\Desktop\\Airport\\json\\passengers.json");
+        ArrayList<Passenger> passengers = PassengerReader.read("./json/passengers.json");
         for (Passenger passenger : passengers) {
             this.add(passenger);
         }

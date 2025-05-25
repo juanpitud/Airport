@@ -26,7 +26,7 @@ public class LocationStorage {
     }
 
     public void loadFromJSON() {
-        ArrayList<Location> locations = LocationReader.read("C:\\Users\\david\\Desktop\\Airport\\json\\locations.json");
+        ArrayList<Location> locations = LocationReader.read("./json/locations.json");
         for (Location location : locations) {
             this.add(location);
         }

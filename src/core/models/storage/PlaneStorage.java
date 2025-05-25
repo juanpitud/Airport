@@ -26,7 +26,7 @@ public class PlaneStorage {
     }
 
     public void loadFromJSON() {
-        ArrayList<Plane> planes = PlaneReader.read("C:\\Users\\david\\Desktop\\Airport\\json\\planes.json");
+        ArrayList<Plane> planes = PlaneReader.read("./json/planes.json");
         for (Plane plane : planes) {
             this.add(plane);
         }
