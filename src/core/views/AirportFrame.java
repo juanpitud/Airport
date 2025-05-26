@@ -1553,7 +1553,7 @@ public class AirportFrame extends javax.swing.JFrame {
                 id,
                 planeFlight.getItemAt(planeFlight.getSelectedIndex()),
                 departureFlight.getItemAt(departureFlight.getSelectedIndex()),
-                scaleFlight.getItemAt(scaleFlight.getSelectedIndex()),
+                scaleFlight.getSelectedIndex() == 0 ? "" : scaleFlight.getItemAt(scaleFlight.getSelectedIndex()),
                 arrivalFlight.getItemAt(arrivalFlight.getSelectedIndex()),
                 yearFlight.getText(),
                 MONTH1.getItemAt(MONTH1.getSelectedIndex()),
@@ -1650,7 +1650,7 @@ public class AirportFrame extends javax.swing.JFrame {
             flights.sort((a, b) -> a.getDepartureDate().compareTo(b.getDepartureDate()));
 
             for (Flight flight : flights) {
-                model.addRow(new Object[]{flight.getId(), flight.getDepartureLocation().getAirportId(), flight.getArrivalLocation().getAirportId(), (flight.getScaleLocation() == null ? "-" : flight.getScaleLocation().getAirportId()), flight.getDepartureDate().toString().replace('T', ' '), flight.calculateArrivalDate().toString().replace('T', ' '), flight.getPlane().getId(), flight.getNumPassengers()});
+                model.addRow(new Object[]{flight.getId(), flight.getDepartureDate(), flight.calculateArrivalDate()});
             }
         } else {
             JOptionPane.showMessageDialog(this, response.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
