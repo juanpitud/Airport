@@ -12,7 +12,7 @@ import java.util.ArrayList;
  *
  * @author juans
  */
-public class PlaneStorage {
+public class PlaneStorage implements IStorage<Plane, String> {
 
     // Instancia Singleton
     private static PlaneStorage instance;

@@ -12,7 +12,7 @@ import java.util.ArrayList;
  *
  * @author juans
  */
-public class LocationStorage {
+public class LocationStorage implements IStorage<Location, String> {
 
     // Instancia Singleton
     private static LocationStorage instance;

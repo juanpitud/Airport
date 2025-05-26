@@ -23,8 +23,8 @@ import java.util.ArrayList;
  */
 public class FlightController {
 
-    public static Response createFlight(String id, String planeId, String departureId, String scaleId, String arrivalId, LocalDateTime departureDate, int hoursDurationArrival, int minutesDurationArrival, int hoursDurationScale, int minutesDurationScale) {
-        if (id.isEmpty()) {
+    public static Response createFlight(String id, String planeId, String departureId, String scaleId, String arrivalId, String yearDeparture, String monthDeparture, String dayDeparture, String hourDeparture, String minutesDeparture, String hoursDurationArrivalText, String minutesDurationArrivalText, String hoursDurationScaleText, String minutesDurationScaleText) {
+        if (id.trim().isEmpty()) {
             return new Response("Id must not be empty.", Status.BAD_REQUEST);
         }
 
@@ -32,37 +32,72 @@ public class FlightController {
             return new Response("Id must follow ABZ019 format.", Status.BAD_REQUEST);
         }
 
-        PlaneStorage planeStorage = PlaneStorage.getInstance();
-        Plane plane = planeStorage.get(planeId);
+        Plane plane = PlaneStorage.getInstance().get(planeId);
         if (plane == null) {
             return new Response("Plane must be valid.", Status.BAD_REQUEST);
         }
 
         LocationStorage locationStorage = LocationStorage.getInstance();
         Location departure = locationStorage.get(departureId);
-        Location arrival = locationStorage.get(arrivalId);
         if (departure == null) {
             return new Response("Departure location must be valid.", Status.BAD_REQUEST);
         }
 
+        Location arrival = locationStorage.get(arrivalId);
         if (arrival == null) {
             return new Response("Arrival location must be valid.", Status.BAD_REQUEST);
         }
 
-        if (hoursDurationArrival + minutesDurationArrival <= 0) {
+        Location scale = null;
+        if (scaleId != null && !scaleId.trim().isEmpty()) {
+            scale = locationStorage.get(scaleId);
+            if (scale == null) {
+                return new Response("Scale location must be valid.", Status.BAD_REQUEST);
+            }
+        }
+
+        LocalDateTime departureDate;
+        try {
+            int year = Integer.parseInt(yearDeparture);
+            int month = Integer.parseInt(monthDeparture);
+            int day = Integer.parseInt(dayDeparture);
+            int hour = Integer.parseInt(hourDeparture);
+            int minutes = Integer.parseInt(minutesDeparture);
+
+            departureDate = LocalDateTime.of(year, month, day, hour, minutes);
+        } catch (Exception e) {
+            return new Response("Departure date must be a date.", Status.BAD_REQUEST);
+        }
+
+        int hoursArrival, minutesArrival, hoursScale, minutesScale;
+
+        try {
+            hoursArrival = Integer.parseInt(hoursDurationArrivalText);
+            minutesArrival = Integer.parseInt(minutesDurationArrivalText);
+        } catch (Exception e) {
+            return new Response("Duration of arrival must be numeric.", Status.BAD_REQUEST);
+        }
+
+        if (hoursArrival + minutesArrival <= 0) {
             return new Response("Time of flight must be valid.", Status.BAD_REQUEST);
         }
 
-        Location scale = locationStorage.get(scaleId);
-        if (scale != null && hoursDurationScale + minutesDurationScale <= 0) {
+        try {
+            hoursScale = Integer.parseInt(hoursDurationScaleText);
+            minutesScale = Integer.parseInt(minutesDurationScaleText);
+        } catch (Exception e) {
+            return new Response("Duration of scale must be numeric.", Status.BAD_REQUEST);
+        }
+
+        if (scale != null && (hoursScale + minutesScale <= 0)) {
             return new Response("Time of scale must be valid.", Status.BAD_REQUEST);
         }
 
-        if (scale == null && hoursDurationScale + minutesDurationScale > 0) {
+        if (scale == null && (hoursScale + minutesScale > 0)) {
             return new Response("Time of scale must be zero if there is no scale.", Status.BAD_REQUEST);
         }
 
-        Flight flight = new Flight(id, plane, departure, scale, arrival, departureDate, hoursDurationArrival, minutesDurationArrival, hoursDurationScale, minutesDurationScale);
+        Flight flight = new Flight(id.trim(), plane, departure, scale, arrival, departureDate, hoursArrival, minutesArrival, hoursScale, minutesScale);
 
         boolean ok = FlightStorage.getInstance().add(flight);
         if (!ok) {
@@ -73,7 +108,11 @@ public class FlightController {
     }
 
     public static Response getFlight(String id) {
-        Flight flight = FlightStorage.getInstance().get(id);
+        if (id.trim().isEmpty()) {
+            return new Response("Flight ID must be provided.", Status.BAD_REQUEST);
+        }
+
+        Flight flight = FlightStorage.getInstance().get(id.trim());
         if (flight == null) {
             return new Response("Flight not found.", Status.NOT_FOUND);
         }
@@ -81,36 +120,15 @@ public class FlightController {
         return new Response("Flight found.", Status.OK, flight);
     }
 
-    public static Response updateFlight(String id, Plane plane, Location departureLocation, Location arrivalLocation, LocalDateTime departureDate, int hoursDurationArrival, int minutesDurationArrival) {
-        FlightStorage storage = FlightStorage.getInstance();
-        Flight flight = storage.get(id);
-
-        if (flight == null) {
-            return new Response("Flight not found.", Status.NOT_FOUND);
-        }
-
-        LocationStorage locationStorage = LocationStorage.getInstance();
-        Location departure = locationStorage.get(departureLocation.getAirportId());
-        Location arrival = locationStorage.get(arrivalLocation.getAirportId());
-        if (departure == null) {
-            return new Response("Departure location must be valid.", Status.BAD_REQUEST);
-        }
-
-        if (arrival == null) {
-            return new Response("Arrival location must be valid.", Status.BAD_REQUEST);
-        }
-
-        if (hoursDurationArrival + minutesDurationArrival <= 0) {
-            return new Response("Time of flight must be valid.", Status.BAD_REQUEST);
-        }
-
-        return new Response("Flight edited successfully.", Status.OK);
-
-    }
-
     public static Response deleteFlight(String id) {
-        Flight flight = FlightStorage.getInstance().get(id);
-        if (flight == null) {
+        if (id.trim().isEmpty()) {
+            return new Response("Flight Id must be provided.", Status.BAD_REQUEST);
+        }
+
+        FlightStorage storage = FlightStorage.getInstance();
+        boolean removed = storage.delete(id.trim());
+
+        if (!removed) {
             return new Response("Flight not found.", Status.NOT_FOUND);
         }
 
@@ -121,8 +139,15 @@ public class FlightController {
         return new Response("Flights retrieved successfully.", Status.OK, FlightStorage.getInstance().getAll());
     }
 
-    public static Response addPassengerToFlight(String flightId, long passengerId) {
-        Flight flight = FlightStorage.getInstance().get(flightId);
+    public static Response addPassengerToFlight(String flightIdText, String passengerIdText) {
+        long passengerId;
+        try {
+            passengerId = Long.parseLong(passengerIdText);
+        } catch (Exception e) {
+            return new Response("Passenger Id must be a valid number.", Status.BAD_REQUEST);
+        }
+
+        Flight flight = FlightStorage.getInstance().get(flightIdText);
         if (flight == null) {
             return new Response("Flight not found.", Status.NOT_FOUND);
         }
@@ -138,8 +163,15 @@ public class FlightController {
         return new Response("Passenger added to flight successfully.", Status.OK);
     }
 
-    public static Response getByPassenger(long passengerId) {
-        Passenger passenger = PassengerStorage.getInstance().get(passengerId);
+    public static Response getByPassenger(String passengerIdText) {
+        long id;
+        try {
+            id = Long.parseLong(passengerIdText);
+        } catch (Exception e) {
+            return new Response("Invalid passenger Id.", Status.BAD_REQUEST);
+        }
+
+        Passenger passenger = PassengerStorage.getInstance().get(id);
         if (passenger == null) {
             return new Response("Passenger not found.", Status.NOT_FOUND);
         }
@@ -150,18 +182,30 @@ public class FlightController {
         return new Response("Flights found.", Status.OK, flights);
     }
 
-    public static Response delayFlight(String id, int hours, int minutes) {
-        Flight flight = FlightStorage.getInstance().get(id);
+    public static Response delayFlight(String id, String hoursText, String minutesText) {
+        if (id.trim().isEmpty()) {
+            return new Response("Flight Id must be provided.", Status.BAD_REQUEST);
+        }
+
+        Flight flight = FlightStorage.getInstance().get(id.trim());
         if (flight == null) {
             return new Response("Flight not found.", Status.NOT_FOUND);
         }
 
+        int hours, minutes;
+        try {
+            hours = Integer.parseInt(hoursText);
+            minutes = Integer.parseInt(minutesText);
+        } catch (Exception e) {
+            return new Response("Delay must be numeric.", Status.BAD_REQUEST);
+        }
+
         if (hours + minutes <= 0) {
-            return new Response("Time must be valid.", Status.BAD_REQUEST);
+            return new Response("Delay time must be valid.", Status.BAD_REQUEST);
         }
 
         flight.delay(hours, minutes);
-
-        return new Response("Flights delayed.", Status.OK);
+        return new Response("Flight delayed.", Status.OK);
     }
+
 }

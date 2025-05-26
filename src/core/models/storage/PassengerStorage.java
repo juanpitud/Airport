@@ -12,7 +12,7 @@ import java.util.ArrayList;
  *
  * @author juans
  */
-public class PassengerStorage {
+public class PassengerStorage implements IStorage<Passenger, Long> {
 
     // Instancia Singleton
     private static PassengerStorage instance;
@@ -49,7 +49,7 @@ public class PassengerStorage {
         return passengers.add(passenger);
     }
 
-    public Passenger get(long id) {
+    public Passenger get(Long id) {
         for (Passenger l : passengers) {
             if (l.getId() == id) {
                 return l;
@@ -62,7 +62,7 @@ public class PassengerStorage {
         return new ArrayList<>(passengers);
     }
 
-    public boolean delete(long id) {
+    public boolean delete(Long id) {
         return passengers.removeIf(passenger -> passenger.getId() == id);
     }
 }

@@ -15,86 +15,105 @@ import core.models.storage.PlaneStorage;
  */
 public class PlaneController {
 
-    public static Response createPlane(String id, String brand, String model, int maxCapacity, String airline) {
-        if (id.isEmpty()) {
+    public static Response createPlane(String id, String brand, String model, String maxCapacityText, String airline) {
+        if (id.trim().isEmpty()) {
             return new Response("Plane Id must not be empty.", Status.BAD_REQUEST);
         }
 
         if (!id.matches("^[A-Z]{2}\\d{5}$")) {
-            return new Response("Plane Id must follow AZ01289 format.", Status.BAD_REQUEST);
+            return new Response("Plane Id must follow format: two uppercase letters followed by five digits (e.g., AZ01289).", Status.BAD_REQUEST);
         }
 
-        if (brand.isEmpty()) {
+        if (brand.trim().isEmpty()) {
             return new Response("Brand must be valid.", Status.BAD_REQUEST);
         }
 
-        if (model.isEmpty()) {
+        if (model.trim().isEmpty()) {
             return new Response("Model must be valid.", Status.BAD_REQUEST);
         }
 
-        if (maxCapacity <= 0) {
-            return new Response("Max capacity must be greater than 0.", Status.BAD_REQUEST);
+        int maxCapacity;
+        try {
+            maxCapacity = Integer.parseInt(maxCapacityText);
+            if (maxCapacity <= 0) {
+                return new Response("Max capacity must be greater than 0.", Status.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            return new Response("Max capacity must be a valid number.", Status.BAD_REQUEST);
         }
 
-        if (airline.isEmpty()) {
+        if (airline.trim().isEmpty()) {
             return new Response("Airline must be valid.", Status.BAD_REQUEST);
         }
 
-        Plane plane = new Plane(id, brand, model, maxCapacity, airline);
+        Plane plane = new Plane(id.trim(), brand.trim(), model.trim(), maxCapacity, airline.trim());
 
         boolean ok = PlaneStorage.getInstance().add(plane);
         if (!ok) {
-            return new Response("Plane with this ID already exists.", Status.BAD_REQUEST);
+            return new Response("Plane with this Id already exists.", Status.BAD_REQUEST);
         }
 
         return new Response("Plane created successfully.", Status.CREATED);
     }
 
     public static Response getPlane(String id) {
-        Plane plane = PlaneStorage.getInstance().get(id);
+        if (id.trim().isEmpty()) {
+            return new Response("Plane Id must be provided.", Status.BAD_REQUEST);
+        }
+
+        Plane plane = PlaneStorage.getInstance().get(id.trim());
         if (plane == null) {
-            return new Response("Plane not found.", Status.BAD_REQUEST);
+            return new Response("Plane not found.", Status.NOT_FOUND);
         }
 
         return new Response("Plane found.", Status.OK, plane);
     }
 
     public static Response updatePlane(String id, String brand, String model, String airline) {
+        if (id.trim().isEmpty()) {
+            return new Response("Plane Id must be provided.", Status.BAD_REQUEST);
+        }
+
         PlaneStorage storage = PlaneStorage.getInstance();
-        Plane plane = storage.get(id);
+        Plane plane = storage.get(id.trim());
 
         if (plane == null) {
             return new Response("Plane not found.", Status.NOT_FOUND);
         }
 
-        if (brand == null || brand.isEmpty()) {
+        if (brand.trim().isEmpty()) {
             return new Response("Brand must be valid.", Status.BAD_REQUEST);
         }
 
-        if (model == null || model.isEmpty()) {
+        if (model.trim().isEmpty()) {
             return new Response("Model must be valid.", Status.BAD_REQUEST);
         }
 
-        if (airline == null || airline.isEmpty()) {
+        if (airline.trim().isEmpty()) {
             return new Response("Airline must be valid.", Status.BAD_REQUEST);
         }
 
-        plane.setBrand(brand);
-        plane.setModel(model);
-        plane.setAirline(airline);
+        plane.setBrand(brand.trim());
+        plane.setModel(model.trim());
+        plane.setAirline(airline.trim());
 
-        return new Response("Plane updated successfully.", Status.CREATED);
+        return new Response("Plane updated successfully.", Status.OK);
     }
 
     public static Response deletePlane(String id) {
-        boolean deleted = PlaneStorage.getInstance().delete(id);
-        if (!deleted) {
-            return new Response("Plane not found.", Status.BAD_REQUEST);
+        if (id.trim().isEmpty()) {
+            return new Response("Plane Id must be provided.", Status.BAD_REQUEST);
         }
-        return new Response("Plane deleted successfully.", Status.CREATED);
+
+        boolean deleted = PlaneStorage.getInstance().delete(id.trim());
+        if (!deleted) {
+            return new Response("Plane not found.", Status.NOT_FOUND);
+        }
+
+        return new Response("Plane deleted successfully.", Status.OK);
     }
 
     public static Response getAllPlanes() {
-        return new Response("Locations retrieved successfully.", Status.OK, PlaneStorage.getInstance().getAll());
+        return new Response("Planes retrieved successfully.", Status.OK, PlaneStorage.getInstance().getAll());
     }
 }

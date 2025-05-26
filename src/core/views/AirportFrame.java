@@ -15,8 +15,6 @@ import core.controllers.PlaneController;
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import java.awt.Color;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -1474,19 +1472,16 @@ public class AirportFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_userActionPerformed
 
     private void createPassengerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createPassengerActionPerformed
-        long id = Long.parseLong(idPassenger.getText());
-        String firstname = firstNamePassenger.getText();
-        String lastname = lastNamePassenger.getText();
-        int year = Integer.parseInt(yearPassenger.getText());
-        int month = Integer.parseInt(MONTH.getItemAt(MONTH.getSelectedIndex()));
-        int day = Integer.parseInt(DAY.getItemAt(DAY.getSelectedIndex()));
-        int phoneCode = Integer.parseInt(countryCodePassenger.getText());
-        long phone = Long.parseLong(phonePassenger.getText());
-        String country = countryPassenger.getText();
-
-        LocalDate birthDate = LocalDate.of(year, month, day);
-
-        Response response = PassengerController.createPassenger(id, firstname, lastname, birthDate, phoneCode, phone, country);
+        Response response = PassengerController.createPassenger(
+                idPassenger.getText(),
+                firstNamePassenger.getText(),
+                lastNamePassenger.getText(),
+                yearPassenger.getText(),
+                MONTH.getSelectedItem().toString(),
+                DAY.getSelectedItem().toString(),
+                countryCodePassenger.getText(),
+                phonePassenger.getText(),
+                countryPassenger.getText());
         JOptionPane.showMessageDialog(this, response.getMessage(), "Información", response.getStatus() == Status.CREATED ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE);
 
         if (response.getStatus() == Status.CREATED) {
@@ -1499,19 +1494,19 @@ public class AirportFrame extends javax.swing.JFrame {
             countryCodePassenger.setText("");
             phonePassenger.setText("");
             countryPassenger.setText("");
-        }
 
-        this.userSelect.addItem("" + id);
+            this.userSelect.addItem(idPassenger.getText().trim());
+        }
     }//GEN-LAST:event_createPassengerActionPerformed
 
     private void createPlaneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createPlaneActionPerformed
-        String id = idPlane.getText();
-        String brand = brandPlane.getText();
-        String model = modelPlane.getText();
-        int maxCapacity = Integer.parseInt(capacityPlane.getText());
-        String airline = airlinePlane.getText();
-
-        Response response = PlaneController.createPlane(id, brand, model, maxCapacity, airline);
+        Response response = PlaneController.createPlane(
+                idPlane.getText(),
+                brandPlane.getText(),
+                modelPlane.getText(),
+                capacityPlane.getText(),
+                airlinePlane.getText()
+        );
         JOptionPane.showMessageDialog(this, response.getMessage(), "Información", response.getStatus() == Status.CREATED ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE);
 
         if (response.getStatus() == Status.CREATED) {
@@ -1520,20 +1515,21 @@ public class AirportFrame extends javax.swing.JFrame {
             modelPlane.setText("");
             capacityPlane.setText("");
             airlinePlane.setText("");
-        }
 
-        this.planeFlight.addItem(id);
+            this.planeFlight.addItem(idPlane.getText().trim());
+        }
     }//GEN-LAST:event_createPlaneActionPerformed
 
     private void createLocationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createLocationActionPerformed
-        String id = idLocation.getText();
-        String name = nameLocation.getText();
-        String city = cityLocation.getText();
-        String country = countryLocation.getText();
-        double latitude = Double.parseDouble(latitudeLocation.getText());
-        double longitude = Double.parseDouble(longitudeLocation.getText());
+        String id = idLocation.getText().trim();
 
-        Response response = LocationController.createLocation(id, name, city, country, latitude, longitude);
+        Response response = LocationController.createLocation(
+                id,
+                nameLocation.getText(),
+                cityLocation.getText(),
+                countryLocation.getText(),
+                latitudeLocation.getText(),
+                longitudeLocation.getText());
         JOptionPane.showMessageDialog(this, response.getMessage(), "Información", response.getStatus() == Status.CREATED ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE);
 
         if (response.getStatus() == Status.CREATED) {
@@ -1543,32 +1539,32 @@ public class AirportFrame extends javax.swing.JFrame {
             countryLocation.setText("");
             latitudeLocation.setText("");
             longitudeLocation.setText("");
-        }
 
-        this.departureFlight.addItem(id);
-        this.arrivalFlight.addItem(id);
-        this.scaleFlight.addItem(id);
+            this.departureFlight.addItem(id);
+            this.arrivalFlight.addItem(id);
+            this.scaleFlight.addItem(id);
+        }
     }//GEN-LAST:event_createLocationActionPerformed
 
     private void createFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createFlightActionPerformed
-        String id = idFlight.getText();
-        String planeId = planeFlight.getItemAt(planeFlight.getSelectedIndex());
-        String departureLocationId = departureFlight.getItemAt(departureFlight.getSelectedIndex());
-        String arrivalLocationId = arrivalFlight.getItemAt(arrivalFlight.getSelectedIndex());
-        String scaleLocationId = scaleFlight.getItemAt(scaleFlight.getSelectedIndex());
-        int year = Integer.parseInt(yearFlight.getText());
-        int month = Integer.parseInt(MONTH1.getItemAt(MONTH1.getSelectedIndex()));
-        int day = Integer.parseInt(DAY1.getItemAt(DAY1.getSelectedIndex()));
-        int hour = Integer.parseInt(MONTH2.getItemAt(MONTH2.getSelectedIndex()));
-        int minutes = Integer.parseInt(MINUTE2.getItemAt(MINUTE2.getSelectedIndex()));
-        int hoursDurationsArrival = Integer.parseInt(MONTH3.getItemAt(MONTH3.getSelectedIndex()));
-        int minutesDurationsArrival = Integer.parseInt(DAY3.getItemAt(DAY3.getSelectedIndex()));
-        int hoursDurationsScale = Integer.parseInt(MONTH4.getItemAt(MONTH4.getSelectedIndex()));
-        int minutesDurationsScale = Integer.parseInt(DAY4.getItemAt(DAY4.getSelectedIndex()));
+        String id = idFlight.getText().trim();
 
-        LocalDateTime departureDate = LocalDateTime.of(year, month, day, hour, minutes);
-
-        Response response = FlightController.createFlight(id, planeId, departureLocationId, scaleLocationId, arrivalLocationId, departureDate, hoursDurationsArrival, minutesDurationsArrival, hoursDurationsScale, minutesDurationsScale);
+        Response response = FlightController.createFlight(
+                id,
+                planeFlight.getItemAt(planeFlight.getSelectedIndex()),
+                departureFlight.getItemAt(departureFlight.getSelectedIndex()),
+                scaleFlight.getItemAt(scaleFlight.getSelectedIndex()),
+                arrivalFlight.getItemAt(arrivalFlight.getSelectedIndex()),
+                yearFlight.getText(),
+                MONTH1.getItemAt(MONTH1.getSelectedIndex()),
+                DAY1.getItemAt(DAY1.getSelectedIndex()),
+                MONTH2.getItemAt(MONTH2.getSelectedIndex()),
+                MINUTE2.getItemAt(MINUTE2.getSelectedIndex()),
+                MONTH3.getItemAt(MONTH3.getSelectedIndex()),
+                DAY3.getItemAt(DAY3.getSelectedIndex()),
+                MONTH4.getItemAt(MONTH4.getSelectedIndex()),
+                DAY4.getItemAt(DAY4.getSelectedIndex())
+        );
         JOptionPane.showMessageDialog(this, response.getMessage(), "Información", response.getStatus() == Status.CREATED ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE);
 
         if (response.getStatus() == Status.CREATED) {
@@ -1586,26 +1582,24 @@ public class AirportFrame extends javax.swing.JFrame {
             DAY3.setSelectedIndex(0);
             MONTH4.setSelectedIndex(0);
             DAY4.setSelectedIndex(0);
-        }
 
-        this.flightAddPassenger.addItem(id);
-        this.idDelay.addItem(id);
+            this.flightAddPassenger.addItem(id);
+            this.idDelay.addItem(id);
+        }
     }//GEN-LAST:event_createFlightActionPerformed
 
     private void updateUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateUserActionPerformed
-        long id = Long.parseLong(idUserUpdate.getText());
-        String firstname = firstNameUpdate.getText();
-        String lastname = lastNameUpdate.getText();
-        int year = Integer.parseInt(yearUpdate.getText());
-        int month = Integer.parseInt(MONTH.getItemAt(MONTH5.getSelectedIndex()));
-        int day = Integer.parseInt(DAY.getItemAt(DAY5.getSelectedIndex()));
-        int phoneCode = Integer.parseInt(countryCodeUpdate.getText());
-        long phone = Long.parseLong(phoneUpdate.getText());
-        String country = countryUpdate.getText();
-
-        LocalDate birthDate = LocalDate.of(year, month, day);
-
-        Response response = PassengerController.updatePassenger(id, firstname, lastname, birthDate, phoneCode, phone, country);
+        Response response = PassengerController.updatePassenger(
+                idUserUpdate.getText(),
+                firstNameUpdate.getText(),
+                lastNameUpdate.getText(),
+                yearUpdate.getText(),
+                MONTH.getItemAt(MONTH5.getSelectedIndex()),
+                DAY.getItemAt(DAY5.getSelectedIndex()),
+                countryCodeUpdate.getText(),
+                phoneUpdate.getText(),
+                countryUpdate.getText()
+        );
         JOptionPane.showMessageDialog(this, response.getMessage(), "Información", response.getStatus() == Status.OK ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE);
 
         if (response.getStatus() == Status.OK) {
@@ -1621,10 +1615,9 @@ public class AirportFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_updateUserActionPerformed
 
     private void addPassengerToFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPassengerToFlightActionPerformed
-        long passengerId = Long.parseLong(idAddPassenger.getText());
-        String flightId = flightAddPassenger.getItemAt(flightAddPassenger.getSelectedIndex());
-
-        Response response = FlightController.addPassengerToFlight(flightId, passengerId);
+        Response response = FlightController.addPassengerToFlight(
+                flightAddPassenger.getItemAt(flightAddPassenger.getSelectedIndex()),
+                idAddPassenger.getText());
         JOptionPane.showMessageDialog(this, response.getMessage(), "Información", response.getStatus() == Status.OK ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE);
 
         if (response.getStatus() == Status.OK) {
@@ -1633,11 +1626,10 @@ public class AirportFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_addPassengerToFlightActionPerformed
 
     private void delayFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delayFlightActionPerformed
-        String flightId = idDelay.getItemAt(idDelay.getSelectedIndex());
-        int hours = Integer.parseInt(hourDelay.getItemAt(hourDelay.getSelectedIndex()));
-        int minutes = Integer.parseInt(minuteDelay.getItemAt(minuteDelay.getSelectedIndex()));
-
-        Response response = FlightController.delayFlight(flightId, hours, minutes);
+        Response response = FlightController.delayFlight(
+                idDelay.getItemAt(idDelay.getSelectedIndex()),
+                hourDelay.getItemAt(hourDelay.getSelectedIndex()),
+                minuteDelay.getItemAt(minuteDelay.getSelectedIndex()));
         JOptionPane.showMessageDialog(this, response.getMessage(), "Información", response.getStatus() == Status.OK ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE);
 
         if (response.getStatus() == Status.OK) {
@@ -1648,11 +1640,10 @@ public class AirportFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_delayFlightActionPerformed
 
     private void refreshMyFlightsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshMyFlightsActionPerformed
-        long passengerId = Long.parseLong(userSelect.getItemAt(userSelect.getSelectedIndex()));
         DefaultTableModel model = (DefaultTableModel) myFlights.getModel();
         model.setRowCount(0);
 
-        Response response = FlightController.getByPassenger(passengerId);
+        Response response = FlightController.getByPassenger(userSelect.getItemAt(userSelect.getSelectedIndex()));
         if (response.getStatus() == Status.OK) {
             ArrayList<Flight> flights = (ArrayList<Flight>) response.getObject();
 
